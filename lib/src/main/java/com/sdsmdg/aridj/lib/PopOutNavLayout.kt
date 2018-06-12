@@ -12,4 +12,12 @@ class PopOutNavLayout(ctx: Context): FrameLayout(ctx) {
         setBackgroundColor(Color.DKGRAY)
     }
 
+    fun open() {
+
+    }
+
+    fun close() {
+
+    }
+
 }

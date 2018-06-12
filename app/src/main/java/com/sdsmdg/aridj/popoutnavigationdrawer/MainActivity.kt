@@ -3,6 +3,7 @@ package com.sdsmdg.aridj.popoutnavigationdrawer
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.sdsmdg.aridj.lib.PopOutNavBuilder
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,6 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // for demo
-        PopOutNavBuilder(this).build()
+        PopOutNavBuilder(this, toolbar)
+                .build()
     }
 }
