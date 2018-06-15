@@ -14,8 +14,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         supportActionBar?.title = "Sample App"
 
+        val menus = ArrayList<Int>()
+        menus.add(R.drawable.ic_archive_black_24dp)
+        menus.add(R.drawable.ic_apps_black_24dp)
         // for demo
         PopOutNavBuilder(this, toolbar)
+                .withMenus(menus)
                 .build()
     }
 }
