@@ -29,6 +29,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
     var dragProgress: Float = 0f
     var dragState: Int = ViewDragHelper.STATE_IDLE
     var navColor: Int = Color.TRANSPARENT
+    var itemHighlightColor: Int = Color.BLACK
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
@@ -81,6 +82,10 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         return true
     }
 
+    override fun performClick(): Boolean {
+        return super.performClick()
+    }
+
     fun addMenus(menuIds: ArrayList<Int>) {
         val linearLayout = LinearLayout(context)
         val linearLayoutParams = LinearLayout.LayoutParams(maxHorizontalDrag, LinearLayout.LayoutParams.MATCH_PARENT)
@@ -90,10 +95,8 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         linearLayout.gravity = Gravity.CENTER_HORIZONTAL
         for (i in 0 until menuIds.size) {
             val menuLayout = LinearLayout(context)
-            val menuParams = LinearLayout.LayoutParams(80, 80)
+            val menuParams = LinearLayout.LayoutParams(150, 130)
             menuLayout.gravity = Gravity.CENTER
-            menuParams.bottomMargin = 15
-            menuParams.topMargin = 15
             val imagesView = ImageView(context)
             val params = ViewGroup.LayoutParams(80, 80)
             imagesView.setImageResource(menuIds[i])
@@ -103,10 +106,20 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
             menuLayout.setOnClickListener {
                 itemClickListener?.invoke(i, menuLayout)
+                clearSelectedItem()
+                menuLayout.setBackgroundColor(itemHighlightColor)
+                close()
             }
         }
         this.linearLayout = linearLayout
         addView(linearLayout, linearLayoutParams)
+        clearSelectedItem()
+    }
+
+    private fun clearSelectedItem() {
+        for (menu in menus) {
+            menu.setBackgroundColor(Color.TRANSPARENT)
+        }
     }
 
     private inner class ViewDragCallback : ViewDragHelper.Callback() {

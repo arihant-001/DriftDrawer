@@ -14,6 +14,7 @@ import java.util.*
 class PopOutNavBuilder(private val activity: Activity, private val toolbar: Toolbar) {
 
     private var backgroundColor: Int = Color.TRANSPARENT
+    private var itemHighlightColor: Int = Color.BLACK
     private lateinit var itemClickListener: (Int, View)->Unit
     private var menuIds: ArrayList<Int>
 
@@ -23,6 +24,13 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
 
     fun withMenus(menus: ArrayList<Int>): PopOutNavBuilder {
         this.menuIds = menus
+
+        return this
+    }
+
+    fun withColors(backgroundColor: Int , itemHighlightColor: Int): PopOutNavBuilder {
+        this.backgroundColor = backgroundColor
+        this.itemHighlightColor = itemHighlightColor
 
         return this
     }
@@ -45,6 +53,7 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
         val navDrawer = PopOutNavLayout(activity, rootView)
 
         navDrawer.navColor = backgroundColor
+        navDrawer.itemHighlightColor = itemHighlightColor
         navDrawer.setTransformation(CombineTransformation(
                 Arrays.asList(ScaleTransformation(),
                         RotationTransformation())))
@@ -66,11 +75,5 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
         toggle.syncState()
 
         navDrawer.setDrawerListener(toggle)
-    }
-
-    fun withBackgroundColor(color: Int): PopOutNavBuilder {
-        this.backgroundColor = color
-
-        return this
     }
 }

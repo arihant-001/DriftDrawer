@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         PopOutNavBuilder(this, toolbar)
                 .withMenus(menus)
-                .withBackgroundColor(Color.parseColor("#E91E63"))
+                .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0"))
                 .withItemClickListener { pos: Int, view: View ->
                     Toast.makeText(this@MainActivity,
                             "Item $pos Clicked",
