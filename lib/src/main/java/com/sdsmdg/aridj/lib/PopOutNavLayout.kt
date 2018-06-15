@@ -8,15 +8,20 @@ import android.support.v4.widget.ViewDragHelper
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import com.sdsmdg.aridj.lib.transformations.Transformation
 
 class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ctx) {
 
     private val dragHelper: ViewDragHelper
+    private var transformation: Transformation ?= null
+
     private var drawerListener: DrawerLayout.DrawerListener? = null
     private var linearLayout: LinearLayout? = null
+    private var menus: ArrayList<LinearLayout>
 
     val maxHorizontalDrag: Int = 150
     var isClosed: Boolean = true
@@ -25,6 +30,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
+        menus = ArrayList()
     }
 
     override fun onAttachedToWindow() {
@@ -46,6 +52,10 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
     fun setDrawerListener(listener: DrawerLayout.DrawerListener) {
         this.drawerListener = listener
+    }
+
+    fun setTransformation(transformation: Transformation) {
+        this.transformation = transformation
     }
 
     override fun computeScroll() {
@@ -73,12 +83,20 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         linearLayout.layoutParams = linearLayoutParams
         linearLayout.gravity = Gravity.CENTER_HORIZONTAL
         for (menuId in menuIds) {
+            val menuLayout = LinearLayout(context)
+            val menuParams = LinearLayout.LayoutParams(80, 80)
+            menuLayout.gravity = Gravity.CENTER
+            menuParams.bottomMargin = 15
+            menuParams.topMargin = 15
             val imagesView = ImageView(context)
-            val params = LinearLayout.LayoutParams(80, 80)
-            params.bottomMargin = 15
-            params.topMargin = 15
+            val params = ViewGroup.LayoutParams(80, 80)
             imagesView.setImageResource(menuId)
-            linearLayout.addView(imagesView, params)
+            linearLayout.addView(menuLayout, menuParams)
+            menuLayout.addView(imagesView, params)
+            menus.add(menuLayout)
+
+            imagesView.scaleX = 1/8f
+            imagesView.scaleY = 1/8f
         }
         this.linearLayout = linearLayout
         addView(linearLayout, linearLayoutParams)
@@ -124,6 +142,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         override fun onViewPositionChanged(changedView: View?, left: Int, top: Int, dx: Int, dy: Int) {
             dragProgress = left.toFloat() / maxHorizontalDrag
             drawerListener?.onDrawerSlide(linearLayout, dragProgress)
+            transformViews()
             invalidate()
         }
 
@@ -144,6 +163,14 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
                 drawerListener?.onDrawerStateChanged(DrawerLayout.STATE_IDLE)
             }
             dragState = state
+        }
+    }
+
+    private fun transformViews() {
+        for (i in 0 until menus.size) {
+            var progress = (dragProgress - i.toFloat()/menus.size)/(1f - i.toFloat()/menus.size)
+            progress = Math.max(0f, progress)
+            transformation?.transform(progress, menus[i].getChildAt(0))
         }
     }
 }

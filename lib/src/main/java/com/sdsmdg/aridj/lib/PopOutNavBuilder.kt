@@ -4,6 +4,10 @@ import android.app.Activity
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
 import android.view.ViewGroup
+import com.sdsmdg.aridj.lib.transformations.CombineTransformation
+import com.sdsmdg.aridj.lib.transformations.RotationTransformation
+import com.sdsmdg.aridj.lib.transformations.ScaleTransformation
+import java.util.*
 
 class PopOutNavBuilder(private val activity: Activity, private val toolbar: Toolbar) {
 
@@ -26,12 +30,12 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
         contentView.removeAllViews()
         val navDrawer = PopOutNavLayout(activity, rootView)
 
+        navDrawer.setTransformation(CombineTransformation(
+                Arrays.asList(ScaleTransformation(),
+                        RotationTransformation())))
+
         navDrawer.addMenus(menuIds)
-
-//        navDrawer.addView(menuView)
-
         addDrawer(navDrawer)
-//        navDrawer.addView(tempView)
         navDrawer.addView(rootView)
         contentView.addView(navDrawer)
     }

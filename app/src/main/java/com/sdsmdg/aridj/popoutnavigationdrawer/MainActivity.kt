@@ -17,6 +17,8 @@ class MainActivity : AppCompatActivity() {
         val menus = ArrayList<Int>()
         menus.add(R.drawable.ic_archive_black_24dp)
         menus.add(R.drawable.ic_apps_black_24dp)
+        menus.add(R.drawable.ic_border_color_black_24dp)
+        menus.add(R.drawable.ic_build_black_24dp)
         // for demo
         PopOutNavBuilder(this, toolbar)
                 .withMenus(menus)
