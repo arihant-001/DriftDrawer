@@ -20,6 +20,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
     private var transformation: Transformation ?= null
 
     private var drawerListener: DrawerLayout.DrawerListener? = null
+    private lateinit var itemClickListener: (Int, View)->Unit
     private var linearLayout: LinearLayout? = null
     private var menus: ArrayList<LinearLayout>
 
@@ -58,6 +59,10 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         this.transformation = transformation
     }
 
+    fun setItemClickListener(itemClickListener: (Int, View) -> Unit) {
+        this.itemClickListener = itemClickListener
+    }
+
     override fun computeScroll() {
         if (dragHelper.continueSettling(true)) {
             ViewCompat.postInvalidateOnAnimation(this)
@@ -82,7 +87,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         linearLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
         linearLayout.layoutParams = linearLayoutParams
         linearLayout.gravity = Gravity.CENTER_HORIZONTAL
-        for (menuId in menuIds) {
+        for (i in 0 until menuIds.size) {
             val menuLayout = LinearLayout(context)
             val menuParams = LinearLayout.LayoutParams(80, 80)
             menuLayout.gravity = Gravity.CENTER
@@ -90,13 +95,14 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
             menuParams.topMargin = 15
             val imagesView = ImageView(context)
             val params = ViewGroup.LayoutParams(80, 80)
-            imagesView.setImageResource(menuId)
+            imagesView.setImageResource(menuIds[i])
             linearLayout.addView(menuLayout, menuParams)
             menuLayout.addView(imagesView, params)
             menus.add(menuLayout)
 
-            imagesView.scaleX = 1/8f
-            imagesView.scaleY = 1/8f
+            menuLayout.setOnClickListener {
+                itemClickListener?.invoke(i, menuLayout)
+            }
         }
         this.linearLayout = linearLayout
         addView(linearLayout, linearLayoutParams)

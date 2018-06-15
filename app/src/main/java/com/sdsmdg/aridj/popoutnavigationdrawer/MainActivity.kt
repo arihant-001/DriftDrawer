@@ -2,6 +2,8 @@ package com.sdsmdg.aridj.popoutnavigationdrawer
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View
+import android.widget.Toast
 import com.sdsmdg.aridj.lib.PopOutNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -20,8 +22,15 @@ class MainActivity : AppCompatActivity() {
         menus.add(R.drawable.ic_border_color_black_24dp)
         menus.add(R.drawable.ic_build_black_24dp)
         // for demo
+
         PopOutNavBuilder(this, toolbar)
                 .withMenus(menus)
+                .withItemClickListener { pos: Int, view: View ->
+                    Toast.makeText(this@MainActivity,
+                            "Item $pos Clicked",
+                            Toast.LENGTH_SHORT)
+                            .show()
+                }
                 .build()
     }
 }
