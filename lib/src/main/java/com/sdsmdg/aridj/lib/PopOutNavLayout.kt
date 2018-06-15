@@ -2,6 +2,8 @@ package com.sdsmdg.aridj.lib
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Bundle
+import android.os.Parcelable
 import android.support.v4.view.ViewCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.ViewDragHelper
@@ -12,9 +14,14 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import com.sdsmdg.aridj.lib.transformations.Transformation
 
 class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ctx) {
+
+    private val STATE_SUPER = "super_state"
+    private val STATE_IS_CLOSED = "is_opened"
+    private val STATE_SELECTED_ITEM = "selected_item"
 
     private val dragHelper: ViewDragHelper
     private var transformation: Transformation ?= null
@@ -30,6 +37,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
     var dragState: Int = ViewDragHelper.STATE_IDLE
     var navColor: Int = Color.TRANSPARENT
     var itemHighlightColor: Int = Color.BLACK
+    private var selectedItemPosition: Int = -1
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
@@ -82,11 +90,8 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         return true
     }
 
-    override fun performClick(): Boolean {
-        return super.performClick()
-    }
-
     fun addMenus(menuIds: ArrayList<Int>) {
+        val scrollView = ScrollView(context)
         val linearLayout = LinearLayout(context)
         val linearLayoutParams = LinearLayout.LayoutParams(maxHorizontalDrag, LinearLayout.LayoutParams.MATCH_PARENT)
         linearLayout.orientation = LinearLayout.VERTICAL
@@ -106,19 +111,67 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
             menuLayout.setOnClickListener {
                 itemClickListener?.invoke(i, menuLayout)
-                clearSelectedItem()
-                menuLayout.setBackgroundColor(itemHighlightColor)
+                selectItem(i)
                 close()
             }
         }
+        addView(scrollView)
+        scrollView.addView(linearLayout, linearLayoutParams)
         this.linearLayout = linearLayout
-        addView(linearLayout, linearLayoutParams)
+        selectItem(selectedItemPosition)
+    }
+
+    private fun selectItem(position: Int) {
+        this.selectedItemPosition = position
         clearSelectedItem()
+        if (position != -1) {
+            menus[position].setBackgroundColor(itemHighlightColor)
+        }
     }
 
     private fun clearSelectedItem() {
         for (menu in menus) {
             menu.setBackgroundColor(Color.TRANSPARENT)
+        }
+    }
+
+    fun setSelectedPosition(position: Int) {
+        selectItem(position)
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        super.onSaveInstanceState()
+        val savedState = Bundle()
+        savedState.putParcelable(STATE_SUPER, super.onSaveInstanceState())
+        savedState.putBoolean(STATE_IS_CLOSED, isClosed)
+        savedState.putInt(STATE_SELECTED_ITEM, selectedItemPosition)
+        return savedState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable) {
+        val savedState = state as Bundle
+        super.onRestoreInstanceState(savedState.getParcelable(STATE_SUPER))
+        isClosed = savedState.getBoolean(STATE_IS_CLOSED, true)
+        selectedItemPosition = savedState.getInt(STATE_SELECTED_ITEM, -1)
+
+        selectItem(selectedItemPosition)
+        if (!isClosed) {
+            requestLayout()
+            drawerListener?.onDrawerSlide(linearLayout, maxHorizontalDrag.toFloat())
+        }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        for (i in 0 until childCount) {
+            val child = getChildAt(i)
+            if (child == mainView) {
+                var rootLeft = 0
+                if (!isClosed) rootLeft = maxHorizontalDrag
+                child.layout(rootLeft, top, rootLeft + (right - left), bottom)
+            } else {
+                child.layout(left, top, right, bottom)
+            }
         }
     }
 

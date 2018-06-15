@@ -24,8 +24,9 @@ class MainActivity : AppCompatActivity() {
         menus.add(R.drawable.ic_build_black_24dp)
         // for demo
 
-        PopOutNavBuilder(this, toolbar)
+        val popOutNavLayout = PopOutNavBuilder(this, toolbar)
                 .withMenus(menus)
+                .withDrawerClosed(false)
                 .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0"))
                 .withItemClickListener { pos: Int, view: View ->
                     Toast.makeText(this@MainActivity,
@@ -34,5 +35,6 @@ class MainActivity : AppCompatActivity() {
                             .show()
                 }
                 .build()
+        popOutNavLayout.setSelectedPosition(2)
     }
 }

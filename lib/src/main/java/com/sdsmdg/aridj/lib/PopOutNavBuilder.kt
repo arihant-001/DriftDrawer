@@ -15,6 +15,7 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
 
     private var backgroundColor: Int = Color.TRANSPARENT
     private var itemHighlightColor: Int = Color.BLACK
+    private var isDrawerClosed: Boolean = true
     private lateinit var itemClickListener: (Int, View)->Unit
     private var menuIds: ArrayList<Int>
 
@@ -35,25 +36,34 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
         return this
     }
 
+    fun withDrawerClosed(isClosed: Boolean): PopOutNavBuilder {
+        this.isDrawerClosed = isClosed
+
+        return this
+    }
+
     fun withItemClickListener(itemClickedListener: (Int, View) -> Unit): PopOutNavBuilder {
         this.itemClickListener = itemClickedListener
 
         return this
     }
 
-    fun build() {
+    fun build(): PopOutNavLayout {
         val contentView = activity.findViewById(android.R.id.content) as ViewGroup
         val rootView = contentView.getChildAt(0)
         contentView.removeAllViews()
         val navDrawer = createNavigationDrawer(rootView)
         contentView.addView(navDrawer)
+        return navDrawer
     }
 
     private fun createNavigationDrawer(rootView: View): PopOutNavLayout {
         val navDrawer = PopOutNavLayout(activity, rootView)
+        navDrawer.id = R.id.pop_out_layout
 
         navDrawer.navColor = backgroundColor
         navDrawer.itemHighlightColor = itemHighlightColor
+        navDrawer.isClosed = isDrawerClosed
         navDrawer.setTransformation(CombineTransformation(
                 Arrays.asList(ScaleTransformation(),
                         RotationTransformation())))
