@@ -1,6 +1,7 @@
 package com.sdsmdg.aridj.lib
 
 import android.app.Activity
+import android.graphics.Color
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -12,6 +13,7 @@ import java.util.*
 
 class PopOutNavBuilder(private val activity: Activity, private val toolbar: Toolbar) {
 
+    private var backgroundColor: Int = Color.TRANSPARENT
     private lateinit var itemClickListener: (Int, View)->Unit
     private var menuIds: ArrayList<Int>
 
@@ -42,6 +44,7 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
     private fun createNavigationDrawer(rootView: View): PopOutNavLayout {
         val navDrawer = PopOutNavLayout(activity, rootView)
 
+        navDrawer.navColor = backgroundColor
         navDrawer.setTransformation(CombineTransformation(
                 Arrays.asList(ScaleTransformation(),
                         RotationTransformation())))
@@ -63,5 +66,11 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
         toggle.syncState()
 
         navDrawer.setDrawerListener(toggle)
+    }
+
+    fun withBackgroundColor(color: Int): PopOutNavBuilder {
+        this.backgroundColor = color
+
+        return this
     }
 }

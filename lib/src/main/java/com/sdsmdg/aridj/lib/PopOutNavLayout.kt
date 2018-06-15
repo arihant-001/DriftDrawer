@@ -28,6 +28,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
     var isClosed: Boolean = true
     var dragProgress: Float = 0f
     var dragState: Int = ViewDragHelper.STATE_IDLE
+    var navColor: Int = Color.TRANSPARENT
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
@@ -36,7 +37,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        setBackgroundColor(Color.parseColor("#163028"))
+        setBackgroundColor(navColor)
     }
 
     fun open() {

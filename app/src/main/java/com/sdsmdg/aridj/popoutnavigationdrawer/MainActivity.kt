@@ -1,5 +1,6 @@
 package com.sdsmdg.aridj.popoutnavigationdrawer
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -25,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         PopOutNavBuilder(this, toolbar)
                 .withMenus(menus)
+                .withBackgroundColor(Color.parseColor("#E91E63"))
                 .withItemClickListener { pos: Int, view: View ->
                     Toast.makeText(this@MainActivity,
                             "Item $pos Clicked",
