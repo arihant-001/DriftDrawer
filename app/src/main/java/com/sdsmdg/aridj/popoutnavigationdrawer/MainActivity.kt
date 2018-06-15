@@ -4,8 +4,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.widget.Toast
 import com.sdsmdg.aridj.lib.PopOutNavBuilder
+import com.sdsmdg.aridj.popoutnavigationdrawer.fragments.EditorFragment
+import com.sdsmdg.aridj.popoutnavigationdrawer.fragments.GalleryFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,13 +29,26 @@ class MainActivity : AppCompatActivity() {
                 .withMenus(menus)
                 .withDrawerClosed(false)
                 .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0"))
-                .withItemClickListener { pos: Int, view: View ->
-                    Toast.makeText(this@MainActivity,
-                            "Item $pos Clicked",
-                            Toast.LENGTH_SHORT)
-                            .show()
-                }
+                .withItemClickListener(navItemListener)
                 .build()
         popOutNavLayout.setSelectedPosition(2)
+    }
+
+    private val navItemListener: (Int, View) -> Unit = { pos: Int, view: View ->
+        when (pos) {
+            1 -> {
+                supportFragmentManager.beginTransaction().replace(R.id.container, GalleryFragment())
+                        .commit()
+                supportActionBar?.title = "Gallery"
+            }
+            2 -> {
+                supportFragmentManager.beginTransaction().replace(R.id.container, EditorFragment())
+                        .commit()
+                supportActionBar?.title = "Editor"
+            }
+            else -> {
+
+            }
+        }
     }
 }

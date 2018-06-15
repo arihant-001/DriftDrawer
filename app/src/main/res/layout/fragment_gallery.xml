@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.GalleryFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/widow"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/black_widow"
+            tools:ignore="contentDescription"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:text="Black Widow" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/captain"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/captain_america"
+                tools:ignore="contentDescription"/>
+
+            <ImageView
+                android:id="@+id/iron"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/iron_man"
+                tools:ignore="contentDescription" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
