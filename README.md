@@ -1,7 +1,7 @@
 # PopOutNavigationDrawer
-It is a library for a custom Naviagation Drawer
+It is a library for custom Naviagation Drawer
 
-<img src="./images/sample.gif">
+<img src="./images/sample.gif" width="60%">
 
 ## Usage
 
@@ -58,7 +58,7 @@ val popOutDrawer = PopOutNavBuilder(this, toolbar)
 ### PopOutDrawer
 `build` method of `PopOutNavBuilder` returns `PopOutDrawer`. This drawer can be used to control its behaviors.
 
-Methods/ Variables | Definition
+Methods | Definition
 ------------ | -------------
 isClosed | returns true if drawer is closed otherwise false
 closeDrawer | close the drawer with/ without animation control by argument `animated`. Default value for `animated` is `true`

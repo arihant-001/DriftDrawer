@@ -2,7 +2,7 @@ package com.sdsmdg.aridj.lib
 
 interface PopOutDrawer {
 
-    var isClosed: Boolean
+    fun isDrawerClosed(): Boolean
 
     fun closeDrawer()
 

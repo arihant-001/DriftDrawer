@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical"
+    tools:context=".fragments.SettingFragment">
+
+    <Button
+        android:id="@+id/close_drawer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close without animation"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/close_drawer_anim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Close with animation"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/open_drawer"
+        android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open without animation"
+        android:background="@color/colorAccent"/>
+
+    <Button
+        android:id="@+id/open_drawer_anim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Open with animation"
+        android:layout_marginBottom="8dp"
+        android:background="@color/colorAccent"/>
+
+</LinearLayout>

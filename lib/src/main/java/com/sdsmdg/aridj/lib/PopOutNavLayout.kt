@@ -39,7 +39,7 @@ class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
     var navColor: Int = Color.TRANSPARENT
     var itemHighlightColor: Int = Color.BLACK
     private var selectedItemPosition: Int = -1
-    override var isClosed: Boolean = true
+    var isClosed: Boolean = true
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
@@ -71,8 +71,9 @@ class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
             closeDrawer()
         } else{
             isClosed = true
+            dragProgress = 0f
             requestLayout()
-            drawerListener?.onDrawerSlide(parentLayout, maxHorizontalDrag.toFloat())
+            drawerListener?.onDrawerSlide(parentLayout, 0f)
         }
     }
 
@@ -87,9 +88,14 @@ class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
             openDrawer()
         } else {
             isClosed = false
+            dragProgress = 1f
             requestLayout()
             drawerListener?.onDrawerSlide(parentLayout, maxHorizontalDrag.toFloat())
         }
+    }
+
+    override fun isDrawerClosed(): Boolean {
+        return isClosed
     }
 
     override fun getLayout(): PopOutNavLayout {
@@ -193,7 +199,10 @@ class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
             val child = getChildAt(i)
             if (child == mainView) {
                 var rootLeft = 0
-                if (!isClosed) rootLeft = maxHorizontalDrag
+                if (!isClosed) {
+                    rootLeft = maxHorizontalDrag
+                    transformViews()
+                }
                 child.layout(rootLeft, top, rootLeft + (right - left), bottom)
             } else {
                 child.layout(left, top, right, bottom)
