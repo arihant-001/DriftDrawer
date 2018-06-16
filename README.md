@@ -20,17 +20,48 @@ It is a library for a custom Naviagation Drawer
 2. Build the drawer programmatically using `PopOutNavBuilder`.
 
 ``` kotlin
-  val popOutNavLayout = PopOutNavBuilder(context, toolbar)
-          .withMenus(icons)
-          .build()
+  PopOutNavBuilder(context, toolbar)
+    .withMenus(icons)
+    .build()
+```
+
+### ItemClickListener
+
+- Using lamdas
+
+```kotlin
+val navItemListener: (Int, View) -> Unit = { pos: Int, view: View ->
+    Toast.makeText(context, "Position: " + pos, Toast.LENGTH_SHORT).show()
+  }
+```
+
+- This itemClickListener can be easily pass in builder
+
+``` kotlin
+  PopOutNavBuilder(context, toolbar)
+    .withMenus(icons)
+    .withItemClickListener(navItemListener)
+    .build()
 ```
 
 ### Builder Extras
+
 ``` kotlin
-val popOutNavLayout = PopOutNavBuilder(this, toolbar)
-                .withMenus(icons)
-                .withDrawerClosed(false) // set initial state of drawer
-                .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0")) // sets background and item highlight colors
-                .withItemClickListener(navItemListener) // sets item click listener
-                .build()
+val popOutDrawer = PopOutNavBuilder(this, toolbar)
+    .withMenus(icons)
+    .withDrawerClosed(false) // set initial state of drawer
+    .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0")) // sets background and item highlight colors
+    .withItemClickListener(navItemListener) // sets item click listener
+    .build()
 ```
+
+### PopOutDrawer
+`build` method of `PopOutNavBuilder` returns `PopOutDrawer`. This drawer can be used to control its behaviors.
+
+Methods/ Variables | Definition
+------------ | -------------
+isClosed | returns true if drawer is closed otherwise false
+closeDrawer | close the drawer with/ without animation control by argument `animated`. Default value for `animated` is `true`
+openDrawer | open the drawer with/ without animation control by argument `animated`. Default value for `animated` is `true`
+setSelectedPosition | sets the position passed in argument as selected position
+getLayout | returns the `PopOutNavLayout` for drawer
