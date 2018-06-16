@@ -17,48 +17,39 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import com.sdsmdg.aridj.lib.transformations.Transformation
 
-class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ctx) {
+private const val STATE_SUPER = "super_state"
+private const val STATE_IS_CLOSED = "is_opened"
+private const val STATE_SELECTED_ITEM = "selected_item"
 
-    private val STATE_SUPER = "super_state"
-    private val STATE_IS_CLOSED = "is_opened"
-    private val STATE_SELECTED_ITEM = "selected_item"
+class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
+    PopOutDrawer {
 
     private val dragHelper: ViewDragHelper
     private var transformation: Transformation ?= null
+    private lateinit var mainView: View
 
     private var drawerListener: DrawerLayout.DrawerListener? = null
-    private lateinit var itemClickListener: (Int, View)->Unit
-    private var linearLayout: LinearLayout? = null
+    var navItemClickListener: (Int, View)->Unit
+    private val parentLayout: LinearLayout
     private var menus: ArrayList<LinearLayout>
 
     val maxHorizontalDrag: Int = 150
-    var isClosed: Boolean = true
     var dragProgress: Float = 0f
     var dragState: Int = ViewDragHelper.STATE_IDLE
     var navColor: Int = Color.TRANSPARENT
     var itemHighlightColor: Int = Color.BLACK
     private var selectedItemPosition: Int = -1
+    override var isClosed: Boolean = true
 
     init {
         dragHelper = ViewDragHelper.create(this, 1.0f, ViewDragCallback())
         menus = ArrayList()
+        parentLayout = LinearLayout(context)
+        navItemClickListener = { _, _ -> }
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        setBackgroundColor(navColor)
-    }
-
-    fun open() {
-        if (dragHelper.smoothSlideViewTo(mainView, maxHorizontalDrag, mainView.top)) {
-            ViewCompat.postInvalidateOnAnimation(this)
-        }
-    }
-
-    fun close() {
-        if (dragHelper.smoothSlideViewTo(mainView, 0, mainView.top)) {
-            ViewCompat.postInvalidateOnAnimation(this)
-        }
+    fun setMainView(mainView: View) {
+        this.mainView = mainView
     }
 
     fun setDrawerListener(listener: DrawerLayout.DrawerListener) {
@@ -69,8 +60,45 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         this.transformation = transformation
     }
 
-    fun setItemClickListener(itemClickListener: (Int, View) -> Unit) {
-        this.itemClickListener = itemClickListener
+    override fun closeDrawer() {
+        if (dragHelper.smoothSlideViewTo(mainView, 0, mainView.top)) {
+            ViewCompat.postInvalidateOnAnimation(this)
+        }
+    }
+
+    override fun closeDrawer(animated: Boolean) {
+        if(animated) {
+            closeDrawer()
+        } else{
+            isClosed = true
+            requestLayout()
+            drawerListener?.onDrawerSlide(parentLayout, maxHorizontalDrag.toFloat())
+        }
+    }
+
+    override fun openDrawer() {
+        if (dragHelper.smoothSlideViewTo(mainView, maxHorizontalDrag, mainView.top)) {
+            ViewCompat.postInvalidateOnAnimation(this)
+        }
+    }
+
+    override fun openDrawer(animated: Boolean) {
+        if(animated) {
+            openDrawer()
+        } else {
+            isClosed = false
+            requestLayout()
+            drawerListener?.onDrawerSlide(parentLayout, maxHorizontalDrag.toFloat())
+        }
+    }
+
+    override fun getLayout(): PopOutNavLayout {
+        return this
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        setBackgroundColor(navColor)
     }
 
     override fun computeScroll() {
@@ -92,12 +120,11 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
     fun addMenus(menuIds: ArrayList<Int>) {
         val scrollView = ScrollView(context)
-        val linearLayout = LinearLayout(context)
         val linearLayoutParams = LinearLayout.LayoutParams(maxHorizontalDrag, LinearLayout.LayoutParams.MATCH_PARENT)
-        linearLayout.orientation = LinearLayout.VERTICAL
+        parentLayout.orientation = LinearLayout.VERTICAL
         linearLayoutParams.gravity = Gravity.CENTER_HORIZONTAL
-        linearLayout.layoutParams = linearLayoutParams
-        linearLayout.gravity = Gravity.CENTER_HORIZONTAL
+        parentLayout.layoutParams = linearLayoutParams
+        parentLayout.gravity = Gravity.CENTER_HORIZONTAL
         for (i in 0 until menuIds.size) {
             val menuLayout = LinearLayout(context)
             val menuParams = LinearLayout.LayoutParams(150, 130)
@@ -105,19 +132,19 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
             val imagesView = ImageView(context)
             val params = ViewGroup.LayoutParams(80, 80)
             imagesView.setImageResource(menuIds[i])
-            linearLayout.addView(menuLayout, menuParams)
+            parentLayout.addView(menuLayout, menuParams)
             menuLayout.addView(imagesView, params)
             menus.add(menuLayout)
 
             menuLayout.setOnClickListener {
-                itemClickListener?.invoke(i, menuLayout)
+                navItemClickListener.invoke(i, menuLayout)
                 selectItem(i)
-                close()
+                closeDrawer()
             }
         }
         addView(scrollView)
-        scrollView.addView(linearLayout, linearLayoutParams)
-        this.linearLayout = linearLayout
+        scrollView.addView(parentLayout, linearLayoutParams)
+
         selectItem(selectedItemPosition)
     }
 
@@ -135,7 +162,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
         }
     }
 
-    fun setSelectedPosition(position: Int) {
+    override fun setSelectedPosition(position: Int) {
         selectItem(position)
     }
 
@@ -156,8 +183,7 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
         selectItem(selectedItemPosition)
         if (!isClosed) {
-            requestLayout()
-            drawerListener?.onDrawerSlide(linearLayout, maxHorizontalDrag.toFloat())
+            openDrawer(false)
         }
     }
 
@@ -177,8 +203,6 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
 
     private inner class ViewDragCallback : ViewDragHelper.Callback() {
 
-        var edgeTouched: Boolean = true
-
         override fun tryCaptureView(child: View, pointerId: Int): Boolean {
             if (isClosed) {
                 return child === mainView
@@ -191,19 +215,15 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
             }
         }
 
-        override fun onEdgeTouched(edgeFlags: Int, pointerId: Int) {
-            edgeTouched = true
-        }
-
-        override fun getViewHorizontalDragRange(child: View?): Int {
+        override fun getViewHorizontalDragRange(child: View): Int {
             return if (child === mainView) maxHorizontalDrag else 0
         }
 
-        override fun clampViewPositionHorizontal(child: View?, left: Int, dx: Int): Int {
+        override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
             return Math.max(0, Math.min(left, maxHorizontalDrag))
         }
 
-        override fun onViewReleased(releasedChild: View?, xvel: Float, yvel: Float) {
+        override fun onViewReleased(releasedChild: View, xvel: Float, yvel: Float) {
             if (xvel > 0) {
                 dragHelper.settleCapturedViewAt(maxHorizontalDrag, mainView.top)
             } else {
@@ -212,9 +232,9 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
             invalidate()
         }
 
-        override fun onViewPositionChanged(changedView: View?, left: Int, top: Int, dx: Int, dy: Int) {
+        override fun onViewPositionChanged(changedView: View, left: Int, top: Int, dx: Int, dy: Int) {
             dragProgress = left.toFloat() / maxHorizontalDrag
-            drawerListener?.onDrawerSlide(linearLayout, dragProgress)
+            drawerListener?.onDrawerSlide(parentLayout, dragProgress)
             transformViews()
             invalidate()
         }
@@ -228,9 +248,9 @@ class PopOutNavLayout(ctx: Context, private val mainView: View) : FrameLayout(ct
             } else if (state == ViewDragHelper.STATE_IDLE && dragState != ViewDragHelper.STATE_IDLE) {
                 // ends
                 if (isClosed) {
-                    drawerListener?.onDrawerClosed(linearLayout)
+                    drawerListener?.onDrawerClosed(parentLayout)
                 } else {
-                    drawerListener?.onDrawerOpened(linearLayout)
+                    drawerListener?.onDrawerOpened(parentLayout)
                 }
 
                 drawerListener?.onDrawerStateChanged(DrawerLayout.STATE_IDLE)

@@ -1,7 +1,6 @@
 package com.sdsmdg.aridj.lib
 
 import android.app.Activity
-import android.graphics.Color
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.widget.Toolbar
 import android.view.View
@@ -13,10 +12,7 @@ import java.util.*
 
 class PopOutNavBuilder(private val activity: Activity, private val toolbar: Toolbar) {
 
-    private var backgroundColor: Int = Color.TRANSPARENT
-    private var itemHighlightColor: Int = Color.BLACK
-    private var isDrawerClosed: Boolean = true
-    private lateinit var itemClickListener: (Int, View)->Unit
+    private val navDrawerLayout: PopOutNavLayout = PopOutNavLayout(activity)
     private var menuIds: ArrayList<Int>
 
     init {
@@ -30,50 +26,47 @@ class PopOutNavBuilder(private val activity: Activity, private val toolbar: Tool
     }
 
     fun withColors(backgroundColor: Int , itemHighlightColor: Int): PopOutNavBuilder {
-        this.backgroundColor = backgroundColor
-        this.itemHighlightColor = itemHighlightColor
+        this.navDrawerLayout.navColor = backgroundColor
+        this.navDrawerLayout.itemHighlightColor = itemHighlightColor
 
         return this
     }
 
     fun withDrawerClosed(isClosed: Boolean): PopOutNavBuilder {
-        this.isDrawerClosed = isClosed
+        this.navDrawerLayout.isClosed = isClosed
 
         return this
     }
 
     fun withItemClickListener(itemClickedListener: (Int, View) -> Unit): PopOutNavBuilder {
-        this.itemClickListener = itemClickedListener
+        this.navDrawerLayout.navItemClickListener = itemClickedListener
 
         return this
     }
 
-    fun build(): PopOutNavLayout {
+    fun build(): PopOutDrawer {
         val contentView = activity.findViewById(android.R.id.content) as ViewGroup
         val rootView = contentView.getChildAt(0)
         contentView.removeAllViews()
-        val navDrawer = createNavigationDrawer(rootView)
-        contentView.addView(navDrawer)
-        return navDrawer
+        prepareNavLayout(rootView)
+        contentView.addView(navDrawerLayout)
+
+        return navDrawerLayout
     }
 
-    private fun createNavigationDrawer(rootView: View): PopOutNavLayout {
-        val navDrawer = PopOutNavLayout(activity, rootView)
-        navDrawer.id = R.id.pop_out_layout
+    private fun prepareNavLayout(rootView: View): PopOutNavLayout {
+        navDrawerLayout.id = R.id.pop_out_layout
+        navDrawerLayout.setMainView(rootView)
 
-        navDrawer.navColor = backgroundColor
-        navDrawer.itemHighlightColor = itemHighlightColor
-        navDrawer.isClosed = isDrawerClosed
-        navDrawer.setTransformation(CombineTransformation(
+        navDrawerLayout.setTransformation(CombineTransformation(
                 Arrays.asList(ScaleTransformation(),
                         RotationTransformation())))
-        navDrawer.setItemClickListener(itemClickListener)
 
-        navDrawer.addMenus(menuIds)
-        addDrawer(navDrawer)
-        navDrawer.addView(rootView)
+        navDrawerLayout.addMenus(menuIds)
+        addDrawer(navDrawerLayout)
+        navDrawerLayout.addView(rootView)
 
-        return navDrawer
+        return navDrawerLayout
     }
 
     private fun addDrawer(navDrawer: PopOutNavLayout) {
