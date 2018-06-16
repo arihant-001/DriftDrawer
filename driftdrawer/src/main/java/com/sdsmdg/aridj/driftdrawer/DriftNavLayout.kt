@@ -1,4 +1,4 @@
-package com.sdsmdg.aridj.lib
+package com.sdsmdg.aridj.driftdrawer
 
 import android.content.Context
 import android.graphics.Color
@@ -15,14 +15,14 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
-import com.sdsmdg.aridj.lib.transformations.Transformation
+import com.sdsmdg.aridj.driftdrawer.transformations.Transformation
 
 private const val STATE_SUPER = "super_state"
 private const val STATE_IS_CLOSED = "is_opened"
 private const val STATE_SELECTED_ITEM = "selected_item"
 
-class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
-    PopOutDrawer {
+class DriftNavLayout(ctx: Context) : FrameLayout(ctx),
+    DriftDrawer {
 
     private val dragHelper: ViewDragHelper
     private var transformation: Transformation ?= null
@@ -98,13 +98,16 @@ class PopOutNavLayout(ctx: Context) : FrameLayout(ctx),
         return isClosed
     }
 
-    override fun getLayout(): PopOutNavLayout {
+    override fun getLayout(): DriftNavLayout {
         return this
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         setBackgroundColor(navColor)
+        if(!isClosed) {
+            openDrawer(false)
+        }
     }
 
     override fun computeScroll() {

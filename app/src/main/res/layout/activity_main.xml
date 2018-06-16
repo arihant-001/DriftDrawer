@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:fitsSystemWindows="true"
     android:background="@android:color/white"
-    tools:context="com.sdsmdg.aridj.popoutnavigationdrawer.MainActivity">
+    tools:context="com.sdsmdg.aridj.driftdrawerdemo.MainActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"

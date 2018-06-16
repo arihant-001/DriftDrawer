@@ -1,4 +1,4 @@
-package com.sdsmdg.aridj.popoutnavigationdrawer
+package com.sdsmdg.aridj.driftdrawerdemo
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("com.sdsmdg.aridj.popoutnavigationdrawer", appContext.packageName)
+        assertEquals("com.sdsmdg.aridj.driftdrawerdemo", appContext.packageName)
     }
 }

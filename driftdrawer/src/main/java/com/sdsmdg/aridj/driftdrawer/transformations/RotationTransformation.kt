@@ -1,4 +1,4 @@
-package com.sdsmdg.aridj.lib.transformations
+package com.sdsmdg.aridj.driftdrawer.transformations
 
 import android.view.View
 

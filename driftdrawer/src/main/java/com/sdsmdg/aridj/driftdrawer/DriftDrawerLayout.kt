@@ -1,9 +1,15 @@
-package com.sdsmdg.aridj.lib
+package com.sdsmdg.aridj.driftdrawer
 
 import android.content.Context
 import android.support.v4.widget.DrawerLayout
 
-class PopOutNavDrawerLayout(context: Context, private val navLayout: PopOutNavLayout) : DrawerLayout(context) {
+class DriftDrawerLayout(context: Context) : DrawerLayout(context) {
+
+    private lateinit var navLayout: DriftNavLayout
+
+    fun setNavLayout(navLayout: DriftNavLayout) {
+        this.navLayout = navLayout
+    }
 
     override fun openDrawer(gravity: Int) {
         navLayout.openDrawer()

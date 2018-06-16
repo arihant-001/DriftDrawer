@@ -1,6 +1,6 @@
-package com.sdsmdg.aridj.lib
+package com.sdsmdg.aridj.driftdrawer
 
-interface PopOutDrawer {
+interface DriftDrawer {
 
     fun isDrawerClosed(): Boolean
 
@@ -12,7 +12,7 @@ interface PopOutDrawer {
 
     fun openDrawer(animated: Boolean)
 
-    fun getLayout(): PopOutNavLayout
+    fun getLayout(): DriftNavLayout
 
     fun setSelectedPosition(position: Int)
 }

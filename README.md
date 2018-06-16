@@ -1,7 +1,7 @@
-# PopOutNavigationDrawer
+# DriftDrawer
 It is a library for custom Naviagation Drawer
 
-<img src="./images/sample.gif" width="60%">
+<img src="./images/sample.gif">
 
 ## Usage
 
@@ -17,10 +17,10 @@ It is a library for custom Naviagation Drawer
   icons.add(R.drawable.ic_build_black_24dp)
 
 ```
-2. Build the drawer programmatically using `PopOutNavBuilder`.
+2. Build the drawer programmatically using `DriftDrawerBuilder`.
 
 ``` kotlin
-  PopOutNavBuilder(context, toolbar)
+  DriftDrawerBuilder(context, toolbar)
     .withMenus(icons)
     .build()
 ```
@@ -38,7 +38,7 @@ val navItemListener: (Int, View) -> Unit = { pos: Int, view: View ->
 - This itemClickListener can be easily pass in builder
 
 ``` kotlin
-  PopOutNavBuilder(context, toolbar)
+  DriftDrawerBuilder(context, toolbar)
     .withMenus(icons)
     .withItemClickListener(navItemListener)
     .build()
@@ -47,7 +47,7 @@ val navItemListener: (Int, View) -> Unit = { pos: Int, view: View ->
 ### Builder Extras
 
 ``` kotlin
-val popOutDrawer = PopOutNavBuilder(this, toolbar)
+val driftDrawer = DriftDrawerBuilder(this, toolbar)
     .withMenus(icons)
     .withDrawerClosed(false) // set initial state of drawer
     .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0")) // sets background and item highlight colors
@@ -55,8 +55,8 @@ val popOutDrawer = PopOutNavBuilder(this, toolbar)
     .build()
 ```
 
-### PopOutDrawer
-`build` method of `PopOutNavBuilder` returns `PopOutDrawer`. This drawer can be used to control its behaviors.
+### DriftDrawer
+`build` method of `DriftDrawerBuilder` returns `DriftDrawer`. This drawer can be used to control its behaviors.
 
 Methods | Definition
 ------------ | -------------
@@ -64,4 +64,4 @@ isClosed | returns true if drawer is closed otherwise false
 closeDrawer | close the drawer with/ without animation control by argument `animated`. Default value for `animated` is `true`
 openDrawer | open the drawer with/ without animation control by argument `animated`. Default value for `animated` is `true`
 setSelectedPosition | sets the position passed in argument as selected position
-getLayout | returns the `PopOutNavLayout` for drawer
+getLayout | returns the `DriftNavLayout` for drawer

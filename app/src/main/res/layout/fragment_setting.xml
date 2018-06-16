@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:orientation="vertical"
-    tools:context=".fragments.SettingFragment">
+    tools:context="com.sdsmdg.aridj.driftdrawerdemo.fragments.SettingFragment">
 
     <Button
         android:id="@+id/close_drawer"

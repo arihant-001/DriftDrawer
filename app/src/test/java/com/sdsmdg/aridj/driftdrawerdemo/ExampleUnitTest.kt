@@ -1,4 +1,4 @@
-package com.sdsmdg.aridj.popoutnavigationdrawer
+package com.sdsmdg.aridj.driftdrawerdemo
 
 import org.junit.Test
 
