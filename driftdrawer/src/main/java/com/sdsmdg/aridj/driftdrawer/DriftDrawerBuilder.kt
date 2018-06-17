@@ -38,6 +38,12 @@ class DriftDrawerBuilder(private val activity: Activity, private val toolbar: To
         return this
     }
 
+    fun withSize(menuSize: Int): DriftDrawerBuilder {
+        this.navDrawerLayout.maxHorizontalDrag = dpToPx(menuSize)
+
+        return this
+    }
+
     fun withItemClickListener(itemClickedListener: (Int, View) -> Unit): DriftDrawerBuilder {
         this.navDrawerLayout.navItemClickListener = itemClickedListener
 
@@ -79,5 +85,9 @@ class DriftDrawerBuilder(private val activity: Activity, private val toolbar: To
         toggle.syncState()
 
         navDrawer.setDrawerListener(toggle)
+    }
+
+    private fun dpToPx(dp: Int): Int {
+        return Math.round(activity.resources.displayMetrics.density * dp)
     }
 }

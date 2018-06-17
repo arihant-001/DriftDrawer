@@ -33,7 +33,7 @@ class DriftNavLayout(ctx: Context) : FrameLayout(ctx),
     private val parentLayout: LinearLayout
     private var menus: ArrayList<LinearLayout>
 
-    val maxHorizontalDrag: Int = 150
+    var maxHorizontalDrag: Int = 150
     var dragProgress: Float = 0f
     var dragState: Int = ViewDragHelper.STATE_IDLE
     var navColor: Int = Color.TRANSPARENT
@@ -136,10 +136,10 @@ class DriftNavLayout(ctx: Context) : FrameLayout(ctx),
         parentLayout.gravity = Gravity.CENTER_HORIZONTAL
         for (i in 0 until menuIds.size) {
             val menuLayout = LinearLayout(context)
-            val menuParams = LinearLayout.LayoutParams(150, 130)
+            val menuParams = LinearLayout.LayoutParams(maxHorizontalDrag, maxHorizontalDrag)
             menuLayout.gravity = Gravity.CENTER
             val imagesView = ImageView(context)
-            val params = ViewGroup.LayoutParams(80, 80)
+            val params = ViewGroup.LayoutParams((maxHorizontalDrag*0.7f).toInt(), (maxHorizontalDrag*0.7f).toInt())
             imagesView.setImageResource(menuIds[i])
             parentLayout.addView(menuLayout, menuParams)
             menuLayout.addView(imagesView, params)

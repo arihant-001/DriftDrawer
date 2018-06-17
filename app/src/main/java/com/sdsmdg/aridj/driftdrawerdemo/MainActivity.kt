@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity(), SettingFragment.SettingFragmentClickLi
 
         driftDrawer = DriftDrawerBuilder(this, toolbar)
                 .withMenus(menus)
+                .withSize(60)
                 .withDrawerClosed(false)
                 .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0"))
                 .withItemClickListener(navItemListener)

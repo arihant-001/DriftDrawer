@@ -1,10 +1,15 @@
 # DriftDrawer
 It is a library for custom Naviagation Drawer
 
-<img src="./images/sample.gif">
+![Sample](images/sample.gif)
 
 ## Usage
 
+### Gradle
+
+```
+compile 'com.sdsmdg.aridj:driftdrawer:1.0.0'
+```
 ### Builder
 
 1. Create a list of icons for navigation items
@@ -50,6 +55,7 @@ val navItemListener: (Int, View) -> Unit = { pos: Int, view: View ->
 val driftDrawer = DriftDrawerBuilder(this, toolbar)
     .withMenus(icons)
     .withDrawerClosed(false) // set initial state of drawer
+    .withSize(60) // set menu size in dp
     .withColors(Color.parseColor("#E91E63"), Color.parseColor("#9C27B0")) // sets background and item highlight colors
     .withItemClickListener(navItemListener) // sets item click listener
     .build()
